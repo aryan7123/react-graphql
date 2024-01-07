@@ -5,7 +5,7 @@ const Header = () => {
     <>
         <header className="w-full bg-brown-800">
             <nav className="py-6 px-10 flex items-center justify-between">
-                <h3 className="text-xl uppercase font-semibold text-white">navbar</h3>
+                <Link to="/" className="text-xl uppercase font-semibold text-white">navbar</Link>
                 <div className="flex items-center gap-3">
                     <Link to="/students" className="text-base uppercase font-semibold text-white">
                         Students

@@ -7,7 +7,7 @@ const Students = () => {
       <Header />
 
       <Card className="max-w-6xl mx-auto px-10 md:px-0 mt-10 rounded-md md:overflow-hidden overflow-x-scroll">
-        <table className="w-[inherit] md:w-full table-auto text-left">
+        <table className="w-full table-auto text-left">
           <thead>
             <tr>
               <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
