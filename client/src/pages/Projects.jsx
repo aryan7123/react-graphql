@@ -1,12 +1,39 @@
+import { useState } from "react";
 import Header from "../components/Header";
-import { Card, Typography } from "@material-tailwind/react";
+import { Card, Typography, CardHeader, Button } from "@material-tailwind/react";
+import { HiOutlineUserAdd } from "react-icons/hi";
+import AddProjects from "../components/AddProjects";
 
 const Projects = () => {
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(!openModal);
+  }
+
   return (
     <>
       <Header />
 
-      <Card className="max-w-6xl mx-auto px-10 md:px-0 mt-10 rounded-md md:overflow-hidden overflow-x-scroll">
+      {openModal && <AddProjects openModal={openModal} handleOpenModal={handleOpenModal}/>}
+      
+      <Card className="w-full md:max-w-6xl mx-auto mt-10 rounded-md md:overflow-hidden overflow-x-scroll">
+        <CardHeader className="max-w-full bg-gray-700 rounded-none mx-0 mt-0 shadow-none">
+          <div className="flex flex-col md:flex-row items-start gap-2 md:gap-0 md:items-center justify-between p-4">
+            <div className="flex flex-col items-start">
+              <Typography className="font-semibold text-white">
+                Project List
+              </Typography>
+              <Typography className="font-normal text-white">
+                See information about all the projects prepared by the students
+              </Typography>
+            </div>
+            <Button onClick={handleOpenModal} className="flex items-center text-white font-semibold gap-1">
+              <HiOutlineUserAdd size={15}/>
+              <span>Add Project</span>
+            </Button>
+          </div>
+        </CardHeader>
         <table className="w-full table-auto text-left">
           <thead>
             <tr>
