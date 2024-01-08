@@ -6,6 +6,7 @@ const GET_STUDENTS = gql`
       id
       name
       age
+      email
       mobileNumber
       subject
     }
@@ -18,6 +19,7 @@ const GET_STUDENT = gql`
       id
       name
       age
+      email
       mobileNumber
       subject
     }

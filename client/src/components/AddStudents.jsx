@@ -44,6 +44,12 @@ const AddStudents = ({ openModal, handleOpenModal }) => {
           </div>
           <div className="mb-3">
             <Typography className="mb-2 font-semibold text-base">
+              Email
+            </Typography>
+            <Input className="text-gray-900 font-medium text-sm" label="Email" name="email" type="email" size="lg" />
+          </div>
+          <div className="mb-3">
+            <Typography className="mb-2 font-semibold text-base">
               Mobile Number
             </Typography>
             <Input className="text-gray-900 font-medium text-sm" label="Mobile Number" name="mobileNumber" type="tel" size="lg" />

@@ -1,8 +1,10 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { graphqlHTTP } from "express-graphql"; 
 
-import Connection from './database/conn.js';
+import Connection from "./database/conn.js";
+import schema from "./routes/routes.js";
 
 const app = express();
 
@@ -17,6 +19,14 @@ app.use(cors());
 
 Connection();
 
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema: schema,
+    graphiql: true,
+  })
+);
+
 app.listen(PORT, () => {
-    console.log(`Running a GraphQL API server at 🚀 ${API_SERVER}`);
+  console.log(`Running a GraphQL API server at 🚀 ${API_SERVER}`);
 });
