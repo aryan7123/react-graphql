@@ -107,6 +107,25 @@ const mutation = new GraphQLObjectType({
           await newStudent.save();
         }
       }
+    },
+    addProject: {
+      type: ProjectType,
+      args: {
+        title: { type: new GraphQLNonNull(GraphQLString) },
+        description: { type: new GraphQLNonNull(GraphQLString) },
+        status: { type: new GraphQLNonNull(GraphQLString) },
+        studentId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      async resolve(parent, args) {
+        const project = new Project({
+          title: args.title,
+          description: args.description,
+          status: args.status,
+          studentId: args.studentId,
+        });
+
+        await project.save();
+      },
     }
   }
 });

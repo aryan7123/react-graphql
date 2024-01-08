@@ -10,6 +10,7 @@ const GET_PROJECTS = gql`
       student {
         id
         name
+        email
       }
     }
   }
@@ -25,6 +26,7 @@ const GET_PROJECT = gql`
       student {
         id
         name
+        email
       }
     }
   }
