@@ -17,10 +17,6 @@ const studentModel = new mongoose.Schema({
         type: String,
         required: true
     },
-    project: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
-    }
 });
 
 const Student = mongoose.model("students", studentModel);

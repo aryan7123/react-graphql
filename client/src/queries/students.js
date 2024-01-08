@@ -8,12 +8,6 @@ const GET_STUDENTS = gql`
       age
       mobileNumber
       subject
-      project {
-        id
-        title
-        description
-        status
-      }
     }
   }
 `;
@@ -26,12 +20,6 @@ const GET_STUDENT = gql`
       age
       mobileNumber
       subject
-      project {
-        id
-        title
-        description
-        status
-      }
     }
   }
 `;

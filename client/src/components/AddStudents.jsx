@@ -1,10 +1,14 @@
-import { 
+import {
   Button,
   Dialog,
   DialogHeader,
   DialogBody,
-  DialogFooter 
-} from "@material-tailwind/react"
+  DialogFooter,
+  Typography,
+  Input,
+} from "@material-tailwind/react";
+
+import { MdClose } from "react-icons/md";
 
 const AddStudents = ({ openModal, handleOpenModal }) => {
   return (
@@ -17,12 +21,40 @@ const AddStudents = ({ openModal, handleOpenModal }) => {
           unmount: { scale: 0.9, y: -100 },
         }}
       >
-        <DialogHeader>Its a simple dialog.</DialogHeader>
+        <DialogHeader className="w-full justify-between border-b border-gray-500">
+          <h3>Add Student</h3>
+          <MdClose
+            size={30}
+            className="cursor-pointer"
+            onClick={handleOpenModal}
+          />
+        </DialogHeader>
         <DialogBody>
-          The key to more success is to have a lot of pillows. Put it this way,
-          it took me twenty five years to get these plants, twenty five years of
-          blood sweat and tears, and I&apos;m never giving up, I&apos;m just
-          getting started. I&apos;m up to something. Fan luv.
+          <div className="mb-3">
+            <Typography className="mb-2 font-semibold text-base">
+              Name
+            </Typography>
+            <Input className="text-gray-900 font-medium text-sm" label="Name" type="text" name="name" size="lg" />
+          </div>
+          <div className="mb-3">
+            <Typography className="mb-2 font-semibold text-base">
+              Age
+            </Typography>
+            <Input className="text-gray-900 font-medium text-sm" label="Age" name="age" type="tel" size="lg" />
+          </div>
+          <div className="mb-3">
+            <Typography className="mb-2 font-semibold text-base">
+              Mobile Number
+            </Typography>
+            <Input className="text-gray-900 font-medium text-sm" label="Mobile Number" name="mobileNumber" type="tel" size="lg" />
+          </div>
+          <div className="mb-3">
+            <Typography className="mb-2 font-semibold text-base">
+              Subject
+            </Typography>
+            <Input className="text-gray-900 font-medium text-sm" label="Subject" name="subject" type="text" size="lg" />
+          </div>
+          <span className="text-sm font-medium text-red-500"></span>
         </DialogBody>
         <DialogFooter>
           <Button
@@ -31,13 +63,16 @@ const AddStudents = ({ openModal, handleOpenModal }) => {
           >
             <span>Cancel</span>
           </Button>
-          <Button className="bg-green-500 hover:bg-green-400" onClick={handleOpenModal}>
-            <span>Confirm</span>
+          <Button
+            className="bg-green-500 hover:bg-green-400"
+            onClick={handleOpenModal}
+          >
+            <span>save</span>
           </Button>
         </DialogFooter>
       </Dialog>
     </>
-  )
-}
+  );
+};
 
-export default AddStudents
+export default AddStudents;
