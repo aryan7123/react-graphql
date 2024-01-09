@@ -9,10 +9,39 @@ import {
   Select,
   Option,
 } from "@material-tailwind/react";
+import { useState } from "react";
+import { useMutation } from "@apollo/client";
 
 import { MdClose } from "react-icons/md";
 
+import { GET_PROJECTS } from "../queries/projects.js";
+import { ADD_PROJECTS } from "../mutations/projects.js";
+
 const AddProjects = ({ openModal, handleOpenModal }) => {
+  const [projectData, setProjectData] = useState({
+    title: "",
+    description: "",
+    status: "",
+    studentId: "",
+  });
+
+  const { title, description, status, studentId } = projectData;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProjectData({ ...projectData, [name]: value });
+  };
+
+  const [handleSaveProject, { data, loading, error }] = useMutation(
+    ADD_PROJECTS,
+    {
+      refetchQueries: [GET_PROJECTS, "getProjects"],
+    }
+  );
+
+  if (loading) return "Submitting...";
+  if (error) return `Submission error! ${error.message}`;
+
   return (
     <>
       <Dialog
@@ -41,6 +70,8 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
               label="Title"
               type="text"
               name="title"
+              value={title}
+              onChange={handleChange}
               size="lg"
             />
           </div>
@@ -53,6 +84,8 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
               label="Description"
               name="description"
               type="text"
+              value={description}
+              onChange={handleChange}
               size="lg"
             />
           </div>
@@ -66,6 +99,8 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
                 mount: { y: 0 },
                 unmount: { y: 25 },
               }}
+              onChange={handleChange}
+              value={status}
             >
               <Option>Material Tailwind HTML</Option>
               <Option>Material Tailwind React</Option>
@@ -84,6 +119,8 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
                 mount: { y: 0 },
                 unmount: { y: 25 },
               }}
+              onChange={handleChange}
+              value={studentId}
             >
               <Option>Material Tailwind HTML</Option>
               <Option>Material Tailwind React</Option>
@@ -103,7 +140,11 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
           </Button>
           <Button
             className="bg-green-500 hover:bg-green-400"
-            onClick={handleOpenModal}
+            onClick={() =>
+              handleSaveProject({
+                variables: { title, description, status, studentId },
+              })
+            }
           >
             <span>Confirm</span>
           </Button>

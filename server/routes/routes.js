@@ -104,7 +104,7 @@ const mutation = new GraphQLObjectType({
             email: args.email,
             subject: args.subject
           });
-          await newStudent.save();
+          return await newStudent.save();
         }
       }
     },
@@ -124,7 +124,7 @@ const mutation = new GraphQLObjectType({
           studentId: args.studentId,
         });
 
-        await project.save();
+        return await project.save();
       },
     }
   }
