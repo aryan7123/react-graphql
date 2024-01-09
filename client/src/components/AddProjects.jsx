@@ -10,10 +10,11 @@ import {
   Option,
 } from "@material-tailwind/react";
 import { useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 
 import { MdClose } from "react-icons/md";
 
+import { GET_STUDENTS } from "../queries/students.js";
 import { GET_PROJECTS } from "../queries/projects.js";
 import { ADD_PROJECTS } from "../mutations/projects.js";
 
@@ -32,7 +33,9 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
     setProjectData({ ...projectData, [name]: value });
   };
 
-  const [handleSaveProject, { data, loading, error }] = useMutation(
+  const { loading, data, error } = useQuery(GET_STUDENTS);
+
+  const [handleSaveProject] = useMutation(
     ADD_PROJECTS,
     {
       refetchQueries: [GET_PROJECTS, "getProjects"],
@@ -41,6 +44,9 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
 
   if (loading) return "Submitting...";
   if (error) return `Submission error! ${error.message}`;
+
+  const students = data && data.students ? data.students : [];
+  console.log(students);
 
   return (
     <>
