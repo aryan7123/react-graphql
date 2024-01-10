@@ -14,6 +14,7 @@ import {
 const StudentType = new GraphQLObjectType({
   name: "Student",
   fields: () => ({
+    id: { type: new GraphQLNonNull(GraphQLID) },
     name: { type: new GraphQLNonNull(GraphQLString) },
     age: { type: new GraphQLNonNull(GraphQLString) },
     mobileNumber: { type: new GraphQLNonNull(GraphQLString) },
@@ -26,6 +27,7 @@ const StudentType = new GraphQLObjectType({
 const ProjectType = new GraphQLObjectType({
   name: "Project",
   fields: () => ({
+    id: { type: new GraphQLNonNull(GraphQLID) },
     title: { type: new GraphQLNonNull(GraphQLString) },
     description: { type: new GraphQLNonNull(GraphQLString) },
     status: { type: new GraphQLNonNull(GraphQLString) },

@@ -15,6 +15,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { MdClose } from "react-icons/md";
 
 import { GET_STUDENTS } from "../queries/students.js";
+import { GET_PROJECTS } from "../queries/projects.js";
 import { ADD_PROJECTS } from "../mutations/projects.js";
 
 const AddProjects = ({ openModal, handleOpenModal }) => {
@@ -32,12 +33,18 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
     setProjectData({ ...projectData, [name]: value });
   };
 
-  const [handleSaveProject] = useMutation(ADD_PROJECTS);
+  const [handleSaveProject] = useMutation(ADD_PROJECTS, { 
+    variables: { title, description, status, studentId },
+    update(cache, { data: { handleSaveProject } }) {
+      const { projects } = cache.readQuery({ query: GET_PROJECTS });
+      cache.writeQuery({
+        query: GET_PROJECTS,
+        data: { projects: [...projects, handleSaveProject] },
+      });
+    }
+  });
 
   const { loading, data, error } = useQuery(GET_STUDENTS);
-
-  if (loading) return "Submitting...";
-  if (error) return `Submission error! ${error.message}`;
 
   const students = data && data.students ? data.students : [];
   console.log(students);
@@ -140,11 +147,7 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
           </Button>
           <Button
             className="bg-green-500 hover:bg-green-400"
-            onClick={() =>
-              handleSaveProject({
-                variables: { title, description, status, studentId },
-              })
-            }
+            onClick={handleSaveProject}
           >
             <span>Confirm</span>
           </Button>

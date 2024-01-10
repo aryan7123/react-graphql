@@ -15,6 +15,7 @@ const ADD_STUDENTS = gql`
       email: $email
       subject: $subject
     ) {
+      id
       name
       age
       email
