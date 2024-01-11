@@ -6,8 +6,6 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
-  Select,
-  Option,
 } from "@material-tailwind/react";
 import { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
@@ -29,19 +27,20 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
   const { title, description, status, studentId } = projectData;
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProjectData({ ...projectData, [name]: value });
+    setProjectData({ ...projectData, [e.target.name]: e.target.value });
   };
 
-  const [handleSaveProject] = useMutation(ADD_PROJECTS, { 
+  const [handleSaveProject] = useMutation(ADD_PROJECTS, {
     variables: { title, description, status, studentId },
     update(cache, { data: { handleSaveProject } }) {
-      const { projects } = cache.readQuery({ query: GET_PROJECTS });
+      const { projects } = cache.readQuery({ query: GET_PROJECTS }) || {
+        projects: [],
+      };
       cache.writeQuery({
         query: GET_PROJECTS,
         data: { projects: [...projects, handleSaveProject] },
       });
-    }
+    },
   });
 
   const { loading, data, error } = useQuery(GET_STUDENTS);
@@ -99,39 +98,41 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
             <Typography className="mb-2 font-semibold text-base">
               Status
             </Typography>
-            <Select
+            <select
               label="Select Status"
               name="status"
-              animate={{
-                mount: { y: 0 },
-                unmount: { y: 25 },
-              }}
               onChange={handleChange}
               value={status}
+              className="border rounded-md w-full p-3 border-blue-gray-200 text-gray-900 font-medium text-sm"
             >
-              <Option value="Not Started">Not Started</Option>
-              <Option value="In Progress">In Progress</Option>
-              <Option value="Completed">Completed</Option>
-            </Select>
+              <option value="" disabled>
+                Select Status
+              </option>
+              <option value="Not Started">Not Started</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
           </div>
           <div className="mb-3">
             <Typography className="mb-2 font-semibold text-base">
               Student
             </Typography>
-            <Select
+            <select
               label="Select Student"
               name="studentId"
-              animate={{
-                mount: { y: 0 },
-                unmount: { y: 25 },
-              }}
               onChange={handleChange}
               value={studentId}
+              className="border rounded-md w-full p-3 border-blue-gray-200 text-gray-900 font-medium text-sm"
             >
+              <option value="" disabled>
+                Select Students
+              </option>
               {students.map((student) => (
-                <Option key={student.id} value={student.id}>{student.name}</Option>        
+                <option key={student.id} value={student.id}>
+                  {student.name}
+                </option>
               ))}
-            </Select>
+            </select>
           </div>
           <span className="text-sm font-medium text-red-500"></span>
         </DialogBody>

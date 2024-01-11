@@ -32,7 +32,7 @@ const ProjectType = new GraphQLObjectType({
     description: { type: new GraphQLNonNull(GraphQLString) },
     status: { type: new GraphQLNonNull(GraphQLString) },
     subject: { type: new GraphQLNonNull(GraphQLString) },
-    studentId: {
+    student: {
       type: StudentType,
       resolve(parent, args) {
         return Student.findById(parent.studentId);

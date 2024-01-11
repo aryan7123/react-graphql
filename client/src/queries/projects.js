@@ -7,11 +7,6 @@ const GET_PROJECTS = gql`
       title
       description
       status
-      student {
-        id
-        name
-        email
-      }
     }
   }
 `;
