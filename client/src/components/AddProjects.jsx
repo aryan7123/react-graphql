@@ -47,7 +47,6 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
   const { loading, data, error } = useQuery(GET_STUDENTS);
 
   const students = data && data.students ? data.students : [];
-  console.log(students);
 
   return (
     <>
@@ -102,6 +101,7 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
             </Typography>
             <Select
               label="Select Status"
+              name="status"
               animate={{
                 mount: { y: 0 },
                 unmount: { y: 25 },
@@ -109,11 +109,9 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
               onChange={handleChange}
               value={status}
             >
-              <Option>Material Tailwind HTML</Option>
-              <Option>Material Tailwind React</Option>
-              <Option>Material Tailwind Vue</Option>
-              <Option>Material Tailwind Angular</Option>
-              <Option>Material Tailwind Svelte</Option>
+              <Option value="Not Started">Not Started</Option>
+              <Option value="In Progress">In Progress</Option>
+              <Option value="Completed">Completed</Option>
             </Select>
           </div>
           <div className="mb-3">
@@ -122,6 +120,7 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
             </Typography>
             <Select
               label="Select Student"
+              name="studentId"
               animate={{
                 mount: { y: 0 },
                 unmount: { y: 25 },
@@ -129,11 +128,9 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
               onChange={handleChange}
               value={studentId}
             >
-              <Option>Material Tailwind HTML</Option>
-              <Option>Material Tailwind React</Option>
-              <Option>Material Tailwind Vue</Option>
-              <Option>Material Tailwind Angular</Option>
-              <Option>Material Tailwind Svelte</Option>
+              {students.map((student) => (
+                <Option key={student.id} value={student.id}>{student.name}</Option>        
+              ))}
             </Select>
           </div>
           <span className="text-sm font-medium text-red-500"></span>

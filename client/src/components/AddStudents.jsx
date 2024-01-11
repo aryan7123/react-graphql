@@ -34,7 +34,14 @@ const AddStudents = ({ openModal, handleOpenModal }) => {
   const [handleSaveStudent, { data, loading, error }] = useMutation(
     ADD_STUDENTS,
     {
-      refetchQueries: [GET_STUDENTS, "getStudents"],
+      variables: { name, age, email, mobileNumber, subject },
+      update(cache, { data: { handleSaveStudent } }) {
+        const { students } = cache.readQuery({ query: GET_STUDENTS });
+        cache.writeQuery({
+          query: GET_STUDENTS,
+          data: { students: [...students, handleSaveStudent] },
+        });
+      }
     }
   );
 
@@ -141,11 +148,7 @@ const AddStudents = ({ openModal, handleOpenModal }) => {
           </Button>
           <Button
             className="bg-green-500 hover:bg-green-400"
-            onClick={() =>
-              handleSaveStudent({
-                variables: { name, age, email, mobileNumber, subject },
-              })
-            }
+            onClick={handleSaveStudent}
           >
             <span>save</span>
           </Button>
