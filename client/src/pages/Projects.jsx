@@ -3,6 +3,9 @@ import Header from "../components/Header";
 import { Card, Typography, CardHeader, Button } from "@material-tailwind/react";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import AddProjects from "../components/AddProjects";
+import { useQuery } from "@apollo/client";
+
+import { GET_PROJECTS } from "../queries/projects";
 
 const Projects = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -10,6 +13,10 @@ const Projects = () => {
   const handleOpenModal = () => {
     setOpenModal(!openModal);
   }
+
+  const { loading, error, data } = useQuery(GET_PROJECTS);
+
+  console.log(data);
 
   return (
     <>

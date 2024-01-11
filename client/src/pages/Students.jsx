@@ -4,12 +4,19 @@ import { Card, Typography, CardHeader, Button } from "@material-tailwind/react";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import AddStudents from "../components/AddStudents";
 
+import { useQuery } from "@apollo/client";
+import { GET_STUDENTS } from "../queries/students";
+
 const Students = () => {
   const [openModal, setOpenModal] = useState(false);
 
   const handleOpenModal = () => {
     setOpenModal(!openModal);
   }
+
+  const { loading, error, data } = useQuery(GET_STUDENTS);
+
+  console.log(data);
 
   return (
     <>
