@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Header from "../components/Header";
 import { Card, Typography, CardHeader, Button } from "@material-tailwind/react";
 import { HiOutlineUserAdd, HiOutlineTrash  } from "react-icons/hi";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import AddProjects from "../components/AddProjects";
 import { useQuery } from "@apollo/client";
+import { useGlobalContext } from "../context/context";
 
 import { GET_PROJECTS } from "../queries/projects";
+import EditProject from "../components/EditProject";
 
 const Projects = () => {
-
+  const { openModal, handleOpenModal, openEditModal, handleOpenEditModal } = useGlobalContext();
   const { loading, error, data } = useQuery(GET_PROJECTS);
 
   const projects = data && data.projects ? data.projects : [];
@@ -23,6 +25,8 @@ const Projects = () => {
       <Header />
 
       {openModal && <AddProjects openModal={openModal} handleOpenModal={handleOpenModal}/>}
+
+      {openEditModal && <EditProject openEditModal={openEditModal} handleOpenEditModal={handleOpenEditModal}/>}
       
       <Card className="w-full md:max-w-6xl mx-auto mt-10 rounded-md md:overflow-hidden overflow-x-scroll">
         <CardHeader className="max-w-full bg-gray-700 rounded-none mx-0 mt-0 shadow-none">
@@ -136,7 +140,7 @@ const Projects = () => {
                     color="blue-gray"
                     className="font-normal"
                   >
-                    <Button className="p-2 mr-1.5 rounded-md text-white bg-green-600">
+                    <Button onClick={handleOpenEditModal} className="p-2 mr-1.5 rounded-md text-white bg-green-600">
                       <HiOutlinePencilSquare size={20}/>
                     </Button>
                     <Button className="p-2 rounded-md text-white bg-red-600">

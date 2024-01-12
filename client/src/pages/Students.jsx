@@ -1,15 +1,17 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Header from "../components/Header";
 import { Card, Typography, CardHeader, Button } from "@material-tailwind/react";
-import { HiOutlineUserAdd, HiOutlineTrash  } from "react-icons/hi";
+import { HiOutlineUserAdd, HiOutlineTrash } from "react-icons/hi";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import AddStudents from "../components/AddStudents";
+import { useGlobalContext } from "../context/context";
 
 import { useQuery } from "@apollo/client";
 import { GET_STUDENTS } from "../queries/students";
+import EditStudent from "../components/EditStudent";
 
 const Students = () => {
-
+  const { openModal, handleOpenModal, openEditModal, handleOpenEditModal } = useGlobalContext();
   const { loading, error, data } = useQuery(GET_STUDENTS);
 
   const students = data && data.students ? data.students : [];
@@ -22,7 +24,13 @@ const Students = () => {
     <>
       <Header />
 
-      {openModal && <AddStudents openModal={openModal} handleOpenModal={handleOpenModal}/>}
+      {openModal && (
+        <AddStudents openModal={openModal} handleOpenModal={handleOpenModal} />
+      )}
+
+      {openEditModal && (
+        <EditStudent openEditModal={openEditModal} handleOpenEditModal={handleOpenEditModal}/>
+      )}
 
       <Card className="w-full md:max-w-6xl mx-auto mt-10 rounded-md md:overflow-hidden overflow-x-scroll">
         <CardHeader className="max-w-full bg-gray-700 rounded-none mx-0 mt-0 shadow-none">
@@ -35,7 +43,10 @@ const Students = () => {
                 See information about all the students
               </Typography>
             </div>
-            <Button onClick={handleOpenModal} className="flex items-center text-white font-semibold gap-1">
+            <Button
+              onClick={handleOpenModal}
+              className="flex items-center text-white font-semibold gap-1"
+            >
               <HiOutlineUserAdd size={15} />
               <span>Add Student</span>
             </Button>
@@ -113,13 +124,13 @@ const Students = () => {
             {students.map((student, index) => (
               <tr key={index}>
                 <td className="p-4 border-b border-blue-gray-50">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal"
-                >
-                  {index + 1}
-                </Typography>
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal"
+                  >
+                    {index + 1}
+                  </Typography>
                 </td>
                 <td className="p-4 border-b border-blue-gray-50">
                   <Typography
@@ -172,11 +183,11 @@ const Students = () => {
                     color="blue-gray"
                     className="font-normal"
                   >
-                    <Button className="p-2 mr-1.5 rounded-md text-white bg-green-600">
-                      <HiOutlinePencilSquare size={20}/>
+                    <Button onClick={handleOpenEditModal} className="p-2 mr-1.5 rounded-md text-white bg-green-600">
+                      <HiOutlinePencilSquare size={20} />
                     </Button>
                     <Button className="p-2 rounded-md text-white bg-red-600">
-                      <HiOutlineTrash size={20}/>
+                      <HiOutlineTrash size={20} />
                     </Button>
                   </Typography>
                 </td>

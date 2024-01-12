@@ -10,12 +10,12 @@ import {
 
 import { MdClose } from "react-icons/md";
 
-const EditProject = () => {
+const EditProject = ({ openEditModal, handleOpenEditModal }) => {
   return (
     <>
       <Dialog
-        open={openModal}
-        handler={handleOpenModal}
+        open={openEditModal}
+        handler={handleOpenEditModal}
         animate={{
           mount: { scale: 1, y: 0 },
           unmount: { scale: 0.9, y: -100 },
@@ -26,7 +26,7 @@ const EditProject = () => {
           <MdClose
             size={30}
             className="cursor-pointer"
-            onClick={handleOpenModal}
+            onClick={handleOpenEditModal}
           />
         </DialogHeader>
         <DialogBody>
@@ -89,6 +89,7 @@ const EditProject = () => {
         </DialogBody>
         <DialogFooter>
           <Button
+            onClick={handleOpenEditModal}
             className="mr-2 bg-red-500 hover:bg-red-400"
           >
             <span>Cancel</span>
