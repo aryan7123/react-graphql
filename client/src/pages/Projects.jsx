@@ -117,7 +117,7 @@ const Projects = () => {
                     {project.title}
                   </Typography>
                 </td>
-                <td className="p-4 border-b border-blue-gray-50">
+                <td className="p-4 border-b border-blue-gray-50 w-[700px] text-ellipsis overflow-hidden">
                   <Typography
                     variant="small"
                     color="blue-gray"
