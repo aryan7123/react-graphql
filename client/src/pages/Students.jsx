@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { Card, Typography, CardHeader, Button } from "@material-tailwind/react";
 import { HiOutlineUserAdd } from "react-icons/hi";
@@ -17,6 +17,10 @@ const Students = () => {
   const { loading, error, data } = useQuery(GET_STUDENTS);
 
   console.log(data);
+
+  useEffect(() => {
+    document.title = "Students";
+  }, []);
 
   return (
     <>
