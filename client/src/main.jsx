@@ -3,6 +3,7 @@ import App from './App.jsx'
 import './index.css'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import { ThemeProvider } from "@material-tailwind/react";
+import { AppProvider } from './context/context.jsx';
 
 const cache = new InMemoryCache({
   typePolicies: {
@@ -31,7 +32,9 @@ const client = new ApolloClient({
 ReactDOM.createRoot(document.getElementById('root')).render(
   <ApolloProvider client={client}>
     <ThemeProvider>
-      <App />
+      <AppProvider>
+        <App />
+      </AppProvider>
     </ThemeProvider>
   </ApolloProvider>
 )

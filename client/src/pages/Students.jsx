@@ -9,11 +9,6 @@ import { useQuery } from "@apollo/client";
 import { GET_STUDENTS } from "../queries/students";
 
 const Students = () => {
-  const [openModal, setOpenModal] = useState(false);
-
-  const handleOpenModal = () => {
-    setOpenModal(!openModal);
-  }
 
   const { loading, error, data } = useQuery(GET_STUDENTS);
 
