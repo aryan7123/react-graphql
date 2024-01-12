@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { Card, Typography, CardHeader, Button } from "@material-tailwind/react";
-import { HiOutlineUserAdd } from "react-icons/hi";
+import { HiOutlineUserAdd, HiOutlineTrash  } from "react-icons/hi";
+import { HiOutlinePencilSquare } from "react-icons/hi2";
 import AddStudents from "../components/AddStudents";
 
 import { useQuery } from "@apollo/client";
@@ -16,7 +17,7 @@ const Students = () => {
 
   const { loading, error, data } = useQuery(GET_STUDENTS);
 
-  console.log(data);
+  const students = data && data.students ? data.students : [];
 
   useEffect(() => {
     document.title = "Students";
@@ -72,7 +73,7 @@ const Students = () => {
                   color="blue-gray"
                   className="font-normal leading-none opacity-70"
                 >
-                  Age
+                  Email
                 </Typography>
               </th>
               <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
@@ -90,25 +91,16 @@ const Students = () => {
                   color="blue-gray"
                   className="font-normal leading-none opacity-70"
                 >
+                  Age
+                </Typography>
+              </th>
+              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-normal leading-none opacity-70"
+                >
                   Subject
-                </Typography>
-              </th>
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
-                >
-                  Project Name
-                </Typography>
-              </th>
-              <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal leading-none opacity-70"
-                >
-                  Project Status
                 </Typography>
               </th>
               <th className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
@@ -123,80 +115,78 @@ const Students = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="p-4 border-b border-blue-gray-50">
+            {students.map((student, index) => (
+              <tr key={index}>
+                <td className="p-4 border-b border-blue-gray-50">
                 <Typography
                   variant="small"
                   color="blue-gray"
                   className="font-normal"
                 >
-                  1
+                  {index + 1}
                 </Typography>
-              </td>
-              <td className="p-4 border-b border-blue-gray-50">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal"
-                >
-                  Aryan
-                </Typography>
-              </td>
-              <td className="p-4 border-b border-blue-gray-50">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal"
-                >
-                  22
-                </Typography>
-              </td>
-              <td className="p-4 border-b border-blue-gray-50">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal"
-                >
-                  6201192109
-                </Typography>
-              </td>
-              <td className="p-4 border-b border-blue-gray-50">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal"
-                >
-                  CSE
-                </Typography>
-              </td>
-              <td className="p-4 border-b border-blue-gray-50">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal"
-                >
-                  GraphQL
-                </Typography>
-              </td>
-              <td className="p-4 border-b border-blue-gray-50">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal"
-                >
-                  Pending
-                </Typography>
-              </td>
-              <td className="p-4 border-b border-blue-gray-50">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal"
-                >
-                  Edit
-                </Typography>
-              </td>
-            </tr>
+                </td>
+                <td className="p-4 border-b border-blue-gray-50">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal"
+                  >
+                    {student.name}
+                  </Typography>
+                </td>
+                <td className="p-4 border-b border-blue-gray-50">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal"
+                  >
+                    {student.email}
+                  </Typography>
+                </td>
+                <td className="p-4 border-b border-blue-gray-50">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal"
+                  >
+                    {student.mobileNumber}
+                  </Typography>
+                </td>
+                <td className="p-4 border-b border-blue-gray-50">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal"
+                  >
+                    {student.age}
+                  </Typography>
+                </td>
+                <td className="p-4 border-b border-blue-gray-50">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal"
+                  >
+                    {student.subject}
+                  </Typography>
+                </td>
+                <td className="p-4 flex items-center border-b border-blue-gray-50">
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal"
+                  >
+                    <Button className="p-2 mr-1.5 rounded-md text-white bg-green-600">
+                      <HiOutlinePencilSquare size={20}/>
+                    </Button>
+                    <Button className="p-2 rounded-md text-white bg-red-600">
+                      <HiOutlineTrash size={20}/>
+                    </Button>
+                  </Typography>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </Card>
