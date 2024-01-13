@@ -128,6 +128,83 @@ const mutation = new GraphQLObjectType({
 
         return await project.save();
       },
+    },
+    updateStudent: {
+      type: StudentType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        age: { type: new GraphQLNonNull(GraphQLString) },
+        mobileNumber: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        subject: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(parent, args) {
+        const existingEmail = await Student.findOne({ email: args.email });
+        const existingPhone = await Student.findOne({ mobileNumber: args.mobileNumber });
+
+        if (existingEmail) {
+          throw new Error('Email already exists');
+        }
+        else if(existingPhone) {
+          throw new Error('Phone Number already exists');
+        }
+        else {
+          return await Student.findByIdAndUpdate(
+            args.id,
+            {
+              $set: {
+                name: args.name,
+                age: args.age,
+                mobileNumber: args.mobileNumber,
+                email: args.email,
+                subject: args.subject
+              }
+            }
+          );
+        }
+      }
+    },
+    updateProject: {
+      type: ProjectType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+        title: { type: new GraphQLNonNull(GraphQLString) },
+        description: { type: new GraphQLNonNull(GraphQLString) },
+        status: { type: new GraphQLNonNull(GraphQLString) },
+        studentId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      async resolve(parent, args) {
+        return await Project.findByIdAndUpdate(
+          args.id,
+          {
+            $set: {
+              title: args.title,
+              description: args.description,
+              status: args.status,
+              studentId: args.studentId,
+            }
+          }
+        );
+      }
+    },
+    deleteStudent: {
+      type: StudentType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      async resolve(parent, args) {
+        return await Student.findByIdAndDelete(args.id);
+      }
+    },
+    deleteProject: {
+      type: ProjectType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      async resolve(parent, args) {
+        return await Project.findByIdAndDelete(args.id);
+      }
     }
   }
 });
