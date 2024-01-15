@@ -4,9 +4,11 @@ const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
     const [openModal, setOpenModal] = useState(false);
+    const [modalId, setModalId] = useState("");
     const [openEditModal, setOpenEditModal] = useState(false);
 
-    const handleOpenEditModal = () => {
+    const handleOpenEditModal = (id) => {
+        setModalId(id);
         setOpenEditModal(!openEditModal);
     }
 
@@ -18,6 +20,7 @@ const AppProvider = ({ children }) => {
         <AppContext.Provider value={{
             openModal, 
             openEditModal,
+            modalId,
             setOpenModal,
             handleOpenModal,
             handleOpenEditModal

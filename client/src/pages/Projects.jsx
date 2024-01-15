@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import Header from "../components/Header";
 import { Card, Typography, CardHeader, Button } from "@material-tailwind/react";
-import { HiOutlineUserAdd, HiOutlineTrash  } from "react-icons/hi";
+import { HiOutlineUserAdd, HiOutlineTrash } from "react-icons/hi";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import AddProjects from "../components/AddProjects";
 import { useQuery } from "@apollo/client";
@@ -11,7 +11,13 @@ import { GET_PROJECTS } from "../queries/projects";
 import EditProject from "../components/EditProject";
 
 const Projects = () => {
-  const { openModal, handleOpenModal, openEditModal, handleOpenEditModal } = useGlobalContext();
+  const {
+    openModal,
+    handleOpenModal,
+    openEditModal,
+    handleOpenEditModal,
+    modalId,
+  } = useGlobalContext();
   const { loading, error, data } = useQuery(GET_PROJECTS);
 
   const projects = data && data.projects ? data.projects : [];
@@ -24,10 +30,18 @@ const Projects = () => {
     <>
       <Header />
 
-      {openModal && <AddProjects openModal={openModal} handleOpenModal={handleOpenModal}/>}
+      {openModal && (
+        <AddProjects openModal={openModal} handleOpenModal={handleOpenModal} />
+      )}
 
-      {openEditModal && <EditProject openEditModal={openEditModal} handleOpenEditModal={handleOpenEditModal}/>}
-      
+      {openEditModal && (
+        <EditProject
+          openEditModal={openEditModal}
+          handleOpenEditModal={handleOpenEditModal}
+          modalId={modalId}
+        />
+      )}
+
       <Card className="w-full md:max-w-6xl mx-auto mt-10 rounded-md md:overflow-hidden overflow-x-scroll">
         <CardHeader className="max-w-full bg-gray-700 rounded-none mx-0 mt-0 shadow-none">
           <div className="flex flex-col md:flex-row items-start gap-2 md:gap-0 md:items-center justify-between p-4">
@@ -39,8 +53,11 @@ const Projects = () => {
                 See information about all the projects prepared by the students
               </Typography>
             </div>
-            <Button onClick={handleOpenModal} className="flex items-center text-white font-semibold gap-1">
-              <HiOutlineUserAdd size={15}/>
+            <Button
+              onClick={handleOpenModal}
+              className="flex items-center text-white font-semibold gap-1"
+            >
+              <HiOutlineUserAdd size={15} />
               <span>Add Project</span>
             </Button>
           </div>
@@ -96,16 +113,16 @@ const Projects = () => {
             </tr>
           </thead>
           <tbody>
-          {projects.map((project, index) => (
+            {projects.map((project, index) => (
               <tr key={index}>
                 <td className="p-4 border-b border-blue-gray-50">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-normal"
-                >
-                  {index + 1}
-                </Typography>
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="font-normal"
+                  >
+                    {index + 1}
+                  </Typography>
                 </td>
                 <td className="p-4 border-b border-blue-gray-50">
                   <Typography
@@ -140,11 +157,14 @@ const Projects = () => {
                     color="blue-gray"
                     className="font-normal"
                   >
-                    <Button onClick={handleOpenEditModal} className="p-2 mr-1.5 rounded-md text-white bg-green-600">
-                      <HiOutlinePencilSquare size={20}/>
+                    <Button
+                      onClick={handleOpenEditModal}
+                      className="p-2 mr-1.5 rounded-md text-white bg-green-600"
+                    >
+                      <HiOutlinePencilSquare size={20} />
                     </Button>
                     <Button className="p-2 rounded-md text-white bg-red-600">
-                      <HiOutlineTrash size={20}/>
+                      <HiOutlineTrash size={20} />
                     </Button>
                   </Typography>
                 </td>

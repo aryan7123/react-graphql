@@ -11,7 +11,13 @@ import { GET_STUDENTS } from "../queries/students";
 import EditStudent from "../components/EditStudent";
 
 const Students = () => {
-  const { openModal, handleOpenModal, openEditModal, handleOpenEditModal } = useGlobalContext();
+  const {
+    openModal,
+    handleOpenModal,
+    openEditModal,
+    handleOpenEditModal,
+    modalId,
+  } = useGlobalContext();
   const { loading, error, data } = useQuery(GET_STUDENTS);
 
   const students = data && data.students ? data.students : [];
@@ -29,7 +35,11 @@ const Students = () => {
       )}
 
       {openEditModal && (
-        <EditStudent openEditModal={openEditModal} handleOpenEditModal={handleOpenEditModal}/>
+        <EditStudent
+          openEditModal={openEditModal}
+          handleOpenEditModal={handleOpenEditModal}
+          modalId={modalId}
+        />
       )}
 
       <Card className="w-full md:max-w-6xl mx-auto mt-10 rounded-md md:overflow-hidden overflow-x-scroll">
@@ -183,7 +193,10 @@ const Students = () => {
                     color="blue-gray"
                     className="font-normal"
                   >
-                    <Button onClick={handleOpenEditModal} className="p-2 mr-1.5 rounded-md text-white bg-green-600">
+                    <Button
+                      onClick={() => handleOpenEditModal(student.id)}
+                      className="p-2 mr-1.5 rounded-md text-white bg-green-600"
+                    >
                       <HiOutlinePencilSquare size={20} />
                     </Button>
                     <Button className="p-2 rounded-md text-white bg-red-600">

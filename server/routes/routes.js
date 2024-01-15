@@ -160,7 +160,8 @@ const mutation = new GraphQLObjectType({
                 email: args.email,
                 subject: args.subject
               }
-            }
+            },
+            { new: true }
           );
         }
       }
@@ -184,7 +185,8 @@ const mutation = new GraphQLObjectType({
               status: args.status,
               studentId: args.studentId,
             }
-          }
+          },
+          { new: true }
         );
       }
     },

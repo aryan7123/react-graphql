@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import { useQuery, useMutation } from "@apollo/client";
 import {
   Button,
   Typography,
@@ -9,8 +11,54 @@ import {
 } from "@material-tailwind/react";
 
 import { MdClose } from "react-icons/md";
+import { GET_STUDENT, GET_STUDENTS } from "../queries/students";
+import { EDIT_STUDENT } from "../mutations/students";
 
-const EditStudent = ({ openEditModal, handleOpenEditModal }) => {
+const EditStudent = ({ openEditModal, handleOpenEditModal, modalId }) => {
+  const { loading, error, data } = useQuery(GET_STUDENT, {
+    variables: { id: modalId },
+  });
+
+  const student = data?.student || {};
+
+  const [studentData, setStudentData] = useState({
+    name: student.name || "",
+    age: student.age || "",
+    email: student.email || "",
+    mobileNumber: student.mobileNumber || "",
+    subject: student.subject || "",
+  });
+
+  const [handleSaveStudent] = useMutation(EDIT_STUDENT, {
+    variables: {
+      id: modalId,
+      ...studentData,
+    },
+    update(cache, { data: { handleSaveStudent } }) {
+      const { students } = cache.readQuery({ query: GET_STUDENTS });
+      cache.writeQuery({
+        query: GET_STUDENTS,
+        data: { students: [...students, handleSaveStudent] },
+      });
+    },
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setStudentData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    if (data?.student) {
+      setStudentData({
+        ...data.student,
+      });
+    }
+  }, [data]);
+
   return (
     <>
       <Dialog
@@ -39,6 +87,8 @@ const EditStudent = ({ openEditModal, handleOpenEditModal }) => {
               label="Name"
               type="text"
               name="name"
+              value={studentData.name || ""}
+              onChange={handleChange}
               size="lg"
             />
           </div>
@@ -51,6 +101,8 @@ const EditStudent = ({ openEditModal, handleOpenEditModal }) => {
               label="Age"
               name="age"
               type="tel"
+              value={studentData.age || ""}
+              onChange={handleChange}
               size="lg"
             />
           </div>
@@ -63,6 +115,8 @@ const EditStudent = ({ openEditModal, handleOpenEditModal }) => {
               label="Email"
               name="email"
               type="email"
+              value={studentData.email || ""}
+              onChange={handleChange}
               size="lg"
             />
           </div>
@@ -75,6 +129,8 @@ const EditStudent = ({ openEditModal, handleOpenEditModal }) => {
               label="Mobile Number"
               name="mobileNumber"
               type="tel"
+              value={studentData.mobileNumber || ""}
+              onChange={handleChange}
               size="lg"
             />
           </div>
@@ -87,6 +143,8 @@ const EditStudent = ({ openEditModal, handleOpenEditModal }) => {
               label="Subject"
               name="subject"
               type="text"
+              value={studentData.subject || ""}
+              onChange={handleChange}
               size="lg"
             />
           </div>
@@ -100,6 +158,7 @@ const EditStudent = ({ openEditModal, handleOpenEditModal }) => {
             <span>Cancel</span>
           </Button>
           <Button
+            onClick={handleSaveStudent}
             className="bg-green-500 hover:bg-green-400"
           >
             <span>save</span>
@@ -107,7 +166,7 @@ const EditStudent = ({ openEditModal, handleOpenEditModal }) => {
         </DialogFooter>
       </Dialog>
     </>
-  )
-}
+  );
+};
 
-export default EditStudent
+export default EditStudent;

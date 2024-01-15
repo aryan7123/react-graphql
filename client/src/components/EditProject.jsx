@@ -10,7 +10,31 @@ import {
 
 import { MdClose } from "react-icons/md";
 
-const EditProject = ({ openEditModal, handleOpenEditModal }) => {
+import { useQuery } from "@apollo/client";
+import { GET_STUDENTS } from "../queries/students";
+import { GET_PROJECTS , GET_PROJECT } from "../queries/projects";
+import { EDIT_PROJECT } from "../mutations/projects";
+import { useState } from "react";
+
+const EditProject = ({ openEditModal, handleOpenEditModal, modalId }) => {
+  const { loading, error, data } = useQuery(GET_STUDENTS);
+  const students = data && data.students ? data.students : [];
+
+  const [projectData, setProjectData] = useState({
+    title: "",
+    description: "",
+    status: "",
+    student: ""
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProjectData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  }
+
   return (
     <>
       <Dialog
@@ -40,6 +64,7 @@ const EditProject = ({ openEditModal, handleOpenEditModal }) => {
               type="text"
               name="title"
               size="lg"
+              value={handleChange}
             />
           </div>
           <div className="mb-3">
@@ -52,6 +77,7 @@ const EditProject = ({ openEditModal, handleOpenEditModal }) => {
               name="description"
               type="text"
               size="lg"
+              value={handleChange}
             />
           </div>
           <div className="mb-3">
@@ -62,6 +88,7 @@ const EditProject = ({ openEditModal, handleOpenEditModal }) => {
               label="Select Status"
               name="status"
               className="border rounded-md w-full p-3 border-blue-gray-200 text-gray-900 font-medium text-sm"
+              value={handleChange}
             >
               <option value="" disabled>
                 Select Status
@@ -79,10 +106,14 @@ const EditProject = ({ openEditModal, handleOpenEditModal }) => {
               label="Select Student"
               name="studentId"
               className="border rounded-md w-full p-3 border-blue-gray-200 text-gray-900 font-medium text-sm"
+              value={handleChange}
             >
               <option value="" disabled>
                 Select Students
               </option>
+              {students.map((student) => (
+                <option key={student.id} value={student.id}>{student.name}</option>
+              ))}
             </select>
           </div>
           <span className="text-sm font-medium text-red-500"></span>
