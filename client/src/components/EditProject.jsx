@@ -50,13 +50,14 @@ const EditProject = ({ openEditModal, handleOpenEditModal, modalId }) => {
       id: modalId,
       ...projectFormData,
     },
-    update(cache, { data: { handleSaveProject } }) {
-      const { projects } = cache.readQuery({ query: GET_PROJECTS });
-      cache.writeQuery({
-        query: GET_PROJECTS,
-        data: { projects: [...projects, handleSaveProject] },
-      });
-    },
+    refetchQueries: [{ query: GET_PROJECTS }]
+    // update(cache, { data: { handleSaveProject } }) {
+    //   const { projects } = cache.readQuery({ query: GET_PROJECTS });
+    //   cache.writeQuery({
+    //     query: GET_PROJECTS,
+    //     data: { projects: [...projects, handleSaveProject] },
+    //   });
+    // },
   });
 
   useEffect(() => {

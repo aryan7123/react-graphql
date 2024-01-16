@@ -34,13 +34,14 @@ const EditStudent = ({ openEditModal, handleOpenEditModal, modalId }) => {
       id: modalId,
       ...studentData,
     },
-    update(cache, { data: { handleSaveStudent } }) {
-      const { students } = cache.readQuery({ query: GET_STUDENTS });
-      cache.writeQuery({
-        query: GET_STUDENTS,
-        data: { students: [...students, handleSaveStudent] },
-      });
-    },
+    refetchQueries: [{ query: GET_STUDENTS }]
+    // update(cache, { data: { handleSaveStudent } }) {
+    //   const { students } = cache.readQuery({ query: GET_STUDENTS });
+    //   cache.writeQuery({
+    //     query: GET_STUDENTS,
+    //     data: { students: [...students, handleSaveStudent] },
+    //   });
+    // },
   });
 
   const handleChange = (e) => {

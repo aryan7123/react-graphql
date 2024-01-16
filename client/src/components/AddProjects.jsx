@@ -32,15 +32,16 @@ const AddProjects = ({ openModal, handleOpenModal }) => {
 
   const [handleSaveProject] = useMutation(ADD_PROJECTS, {
     variables: { title, description, status, studentId },
-    update(cache, { data: { handleSaveProject } }) {
-      const { projects } = cache.readQuery({ query: GET_PROJECTS }) || {
-        projects: [],
-      };
-      cache.writeQuery({
-        query: GET_PROJECTS,
-        data: { projects: [...projects, handleSaveProject] },
-      });
-    },
+    refetchQueries: [{ query: GET_PROJECTS }]
+    // update(cache, { data: { handleSaveProject } }) {
+    //   const { projects } = cache.readQuery({ query: GET_PROJECTS }) || {
+    //     projects: [],
+    //   };
+    //   cache.writeQuery({
+    //     query: GET_PROJECTS,
+    //     data: { projects: [...projects, handleSaveProject] },
+    //   });
+    // },
   });
 
   const { loading, data, error } = useQuery(GET_STUDENTS);

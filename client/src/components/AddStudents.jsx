@@ -35,14 +35,15 @@ const AddStudents = ({ openModal, handleOpenModal }) => {
     ADD_STUDENTS,
     {
       variables: { name, age, email, mobileNumber, subject },
-      update(cache, { data }) {
-        const newStudent = data.handleSaveStudent;
-        const { students } = cache.readQuery({ query: GET_STUDENTS });
-        cache.writeQuery({
-          query: GET_STUDENTS,
-          data: { students: [...students, newStudent] },
-        });
-      },
+      refetchQueries: [{ query: GET_STUDENTS }]
+      // update(cache, { data }) {
+      //   const newStudent = data.handleSaveStudent;
+      //   const { students } = cache.readQuery({ query: GET_STUDENTS });
+      //   cache.writeQuery({
+      //     query: GET_STUDENTS,
+      //     data: { students: [...students, newStudent] },
+      //   });
+      // },
     }
   );  
 
