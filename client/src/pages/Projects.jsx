@@ -158,7 +158,7 @@ const Projects = () => {
                     className="font-normal"
                   >
                     <Button
-                      onClick={handleOpenEditModal}
+                      onClick={() => handleOpenEditModal(project.id)}
                       className="p-2 mr-1.5 rounded-md text-white bg-green-600"
                     >
                       <HiOutlinePencilSquare size={20} />
