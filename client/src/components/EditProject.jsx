@@ -8,32 +8,64 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 
+import { useState, useEffect } from "react";
 import { MdClose } from "react-icons/md";
 
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_STUDENTS } from "../queries/students";
-import { GET_PROJECTS , GET_PROJECT } from "../queries/projects";
+import { GET_PROJECTS, GET_PROJECT } from "../queries/projects";
 import { EDIT_PROJECT } from "../mutations/projects";
-import { useState } from "react";
 
 const EditProject = ({ openEditModal, handleOpenEditModal, modalId }) => {
-  const { loading, error, data } = useQuery(GET_STUDENTS);
-  const students = data && data.students ? data.students : [];
+  const { data: allStudentData } = useQuery(GET_STUDENTS);
+  const students = allStudentData && allStudentData.students ? allStudentData.students : [];
 
-  const [projectData, setProjectData] = useState({
-    title: "",
-    description: "",
-    status: "",
-    student: ""
+  const { data: projectData } = useQuery(GET_PROJECT, {
+    variables: { id: modalId },
   });
+  // console.log(projectData);
+
+  const project = projectData?.project || {};
+  // console.log(project);
+
+  const [projectFormData, setProjectFormData] = useState({
+    title: project.title || "",
+    description: project.description || "",
+    status: project.status || "",
+    student: project.student || ""
+  });
+
+  const { title, description, student, status} = projectFormData;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProjectData((prevData) => ({
+    setProjectFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   }
+
+  const [handleSaveProject] = useMutation(EDIT_PROJECT, {
+    variables: {
+      id: modalId,
+      ...projectFormData,
+    },
+    update(cache, { data: { handleSaveProject } }) {
+      const { projects } = cache.readQuery({ query: GET_PROJECTS });
+      cache.writeQuery({
+        query: GET_PROJECTS,
+        data: { projects: [...projects, handleSaveProject] },
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (projectData?.project) {
+      setProjectFormData({
+        ...projectData.project,
+      });
+    }
+  }, [projectData]);
 
   return (
     <>
@@ -64,7 +96,8 @@ const EditProject = ({ openEditModal, handleOpenEditModal, modalId }) => {
               type="text"
               name="title"
               size="lg"
-              value={handleChange}
+              value={title}
+              onChange={handleChange}
             />
           </div>
           <div className="mb-3">
@@ -77,7 +110,8 @@ const EditProject = ({ openEditModal, handleOpenEditModal, modalId }) => {
               name="description"
               type="text"
               size="lg"
-              value={handleChange}
+              value={description}
+              onChange={handleChange}
             />
           </div>
           <div className="mb-3">
@@ -87,8 +121,9 @@ const EditProject = ({ openEditModal, handleOpenEditModal, modalId }) => {
             <select
               label="Select Status"
               name="status"
+              value={status}
+              onChange={handleChange}
               className="border rounded-md w-full p-3 border-blue-gray-200 text-gray-900 font-medium text-sm"
-              value={handleChange}
             >
               <option value="" disabled>
                 Select Status
@@ -105,8 +140,9 @@ const EditProject = ({ openEditModal, handleOpenEditModal, modalId }) => {
             <select
               label="Select Student"
               name="studentId"
+              value={student}
+              onChange={handleChange}
               className="border rounded-md w-full p-3 border-blue-gray-200 text-gray-900 font-medium text-sm"
-              value={handleChange}
             >
               <option value="" disabled>
                 Select Students
@@ -126,6 +162,7 @@ const EditProject = ({ openEditModal, handleOpenEditModal, modalId }) => {
             <span>Cancel</span>
           </Button>
           <Button
+            onClick={handleSaveProject}
             className="bg-green-500 hover:bg-green-400"
           >
             <span>Confirm</span>
