@@ -9,6 +9,7 @@ import { useGlobalContext } from "../context/context";
 
 import { GET_PROJECTS } from "../queries/projects";
 import EditProject from "../components/EditProject";
+import DeleteProject from "../components/DeleteProject";
 
 const Projects = () => {
   const {
@@ -17,6 +18,8 @@ const Projects = () => {
     openEditModal,
     handleOpenEditModal,
     modalId,
+    openDeleteModal,
+    handleOpenDeleteModal,
   } = useGlobalContext();
   const { loading, error, data } = useQuery(GET_PROJECTS);
 
@@ -38,6 +41,14 @@ const Projects = () => {
         <EditProject
           openEditModal={openEditModal}
           handleOpenEditModal={handleOpenEditModal}
+          modalId={modalId}
+        />
+      )}
+
+      {openDeleteModal && (
+        <DeleteProject
+          openDeleteModal={openDeleteModal}
+          handleOpenDeleteModal={handleOpenDeleteModal}
           modalId={modalId}
         />
       )}
@@ -163,7 +174,10 @@ const Projects = () => {
                     >
                       <HiOutlinePencilSquare size={20} />
                     </Button>
-                    <Button className="p-2 rounded-md text-white bg-red-600">
+                    <Button
+                      onClick={() => handleOpenDeleteModal(project.id)}
+                      className="p-2 rounded-md text-white bg-red-600"
+                    >
                       <HiOutlineTrash size={20} />
                     </Button>
                   </Typography>

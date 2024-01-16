@@ -6,6 +6,12 @@ const AppProvider = ({ children }) => {
     const [openModal, setOpenModal] = useState(false);
     const [modalId, setModalId] = useState("");
     const [openEditModal, setOpenEditModal] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+    const handleOpenDeleteModal = (id) => {
+        setModalId(id);
+        setOpenDeleteModal(!openDeleteModal);
+    }
 
     const handleOpenEditModal = (id) => {
         setModalId(id);
@@ -20,10 +26,12 @@ const AppProvider = ({ children }) => {
         <AppContext.Provider value={{
             openModal, 
             openEditModal,
+            openDeleteModal,
             modalId,
             setOpenModal,
             handleOpenModal,
-            handleOpenEditModal
+            handleOpenEditModal,
+            handleOpenDeleteModal
         }}>
             {children}
         </AppContext.Provider>

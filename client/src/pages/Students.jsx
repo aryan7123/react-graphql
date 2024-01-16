@@ -9,6 +9,7 @@ import { useGlobalContext } from "../context/context";
 import { useQuery } from "@apollo/client";
 import { GET_STUDENTS } from "../queries/students";
 import EditStudent from "../components/EditStudent";
+import DeleteStudent from "../components/DeleteStudent";
 
 const Students = () => {
   const {
@@ -17,6 +18,8 @@ const Students = () => {
     openEditModal,
     handleOpenEditModal,
     modalId,
+    openDeleteModal,
+    handleOpenDeleteModal
   } = useGlobalContext();
   const { loading, error, data } = useQuery(GET_STUDENTS);
 
@@ -31,13 +34,24 @@ const Students = () => {
       <Header />
 
       {openModal && (
-        <AddStudents openModal={openModal} handleOpenModal={handleOpenModal} />
+        <AddStudents 
+          openModal={openModal} 
+          handleOpenModal={handleOpenModal} 
+        />
       )}
 
       {openEditModal && (
         <EditStudent
           openEditModal={openEditModal}
           handleOpenEditModal={handleOpenEditModal}
+          modalId={modalId}
+        />
+      )}
+
+      {openDeleteModal && (
+        <DeleteStudent
+          openDeleteModal={openDeleteModal}
+          handleOpenDeleteModal={handleOpenDeleteModal}
           modalId={modalId}
         />
       )}
@@ -199,7 +213,7 @@ const Students = () => {
                     >
                       <HiOutlinePencilSquare size={20} />
                     </Button>
-                    <Button className="p-2 rounded-md text-white bg-red-600">
+                    <Button onClick={() => handleOpenDeleteModal(student.id)} className="p-2 rounded-md text-white bg-red-600">
                       <HiOutlineTrash size={20} />
                     </Button>
                   </Typography>

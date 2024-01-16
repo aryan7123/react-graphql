@@ -31,22 +31,20 @@ const AddStudents = ({ openModal, handleOpenModal }) => {
     setStudentData({ ...studentData, [name]: value });
   };
 
-  const [handleSaveStudent, { data, loading, error }] = useMutation(
+  const [handleSaveStudent] = useMutation(
     ADD_STUDENTS,
     {
       variables: { name, age, email, mobileNumber, subject },
-      update(cache, { data: { handleSaveStudent } }) {
+      update(cache, { data }) {
+        const newStudent = data.handleSaveStudent;
         const { students } = cache.readQuery({ query: GET_STUDENTS });
         cache.writeQuery({
           query: GET_STUDENTS,
-          data: { students: [...students, handleSaveStudent] },
+          data: { students: [...students, newStudent] },
         });
-      }
+      },
     }
-  );
-
-  if (loading) return "Submitting...";
-  if (error) return `Submission error! ${error.message}`;
+  );  
 
   return (
     <>
