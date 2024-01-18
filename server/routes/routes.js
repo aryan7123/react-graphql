@@ -68,6 +68,16 @@ const RootQueries = new GraphQLObjectType({
         return result;
       }
     },
+    searchProjects: {
+      type: new GraphQLList(ProjectType),
+      args: {
+        query: { type: new GraphQLNonNull(GraphQLString) }
+      },
+      async resolve(_, { query }) {
+        const result = await Project.find({ title: { $regex: query, $options: 'i' } });
+        return result;
+      }
+    },
     projects: {
       type: new GraphQLList(ProjectType),
       resolve(parent, args) {

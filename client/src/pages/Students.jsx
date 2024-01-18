@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { Card, Typography, CardHeader, Button } from "@material-tailwind/react";
-import { HiOutlineUserAdd, HiOutlineTrash } from "react-icons/hi";
-import { HiOutlinePencilSquare } from "react-icons/hi2";
+import { HiOutlineUserAdd } from "react-icons/hi";
 import AddStudents from "../components/AddStudents";
 import { useGlobalContext } from "../context/context";
 
@@ -10,6 +9,7 @@ import { useQuery } from "@apollo/client";
 import { GET_STUDENTS, SEARCH_STUDENT } from "../queries/students";
 import EditStudent from "../components/EditStudent";
 import DeleteStudent from "../components/DeleteStudent";
+import StudentRow from "../components/StudentRow";
 
 const Students = () => {
   const {
@@ -19,7 +19,7 @@ const Students = () => {
     handleOpenEditModal,
     modalId,
     openDeleteModal,
-    handleOpenDeleteModal
+    handleOpenDeleteModal,
   } = useGlobalContext();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,12 +28,20 @@ const Students = () => {
   const handleSearchQuery = (e) => {
     setSearchTerm(true);
     setSearchQuery(e.target.value);
-  }
+  };
 
-  const { loading: studentLoading, error: studentError, data: studentsData } = useQuery(GET_STUDENTS);
+  const {
+    loading: studentLoading,
+    error: studentError,
+    data: studentsData,
+  } = useQuery(GET_STUDENTS);
 
-  const { loading: searchLoading, error: searchError, data: searchData } = useQuery(SEARCH_STUDENT, {
-    variables: { query: searchQuery }
+  const {
+    loading: searchLoading,
+    error: searchError,
+    data: searchData,
+  } = useQuery(SEARCH_STUDENT, {
+    variables: { query: searchQuery },
   });
 
   const searchedStudents = searchData && searchData.searchStudents ? searchData.searchStudents : [];
@@ -48,10 +56,7 @@ const Students = () => {
       <Header />
 
       {openModal && (
-        <AddStudents 
-          openModal={openModal} 
-          handleOpenModal={handleOpenModal} 
-        />
+        <AddStudents openModal={openModal} handleOpenModal={handleOpenModal} />
       )}
 
       {openEditModal && (
@@ -89,7 +94,7 @@ const Students = () => {
                 <HiOutlineUserAdd size={15} />
                 <span>Add Student</span>
               </Button>
-              <input 
+              <input
                 className="bg-white outline-none rounded-md p-2 font-semibold text-sm"
                 name="query"
                 placeholder="Search Students..."
@@ -168,80 +173,24 @@ const Students = () => {
             </tr>
           </thead>
           <tbody>
-            {students.map((student, index) => (
-              <tr key={index}>
-                <td className="p-4 border-b border-blue-gray-50">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {index + 1}
-                  </Typography>
-                </td>
-                <td className="p-4 border-b border-blue-gray-50">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {student.name}
-                  </Typography>
-                </td>
-                <td className="p-4 border-b border-blue-gray-50">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {student.email}
-                  </Typography>
-                </td>
-                <td className="p-4 border-b border-blue-gray-50">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {student.mobileNumber}
-                  </Typography>
-                </td>
-                <td className="p-4 border-b border-blue-gray-50">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {student.age}
-                  </Typography>
-                </td>
-                <td className="p-4 border-b border-blue-gray-50">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {student.subject}
-                  </Typography>
-                </td>
-                <td className="p-4 flex items-center border-b border-blue-gray-50">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    <Button
-                      onClick={() => handleOpenEditModal(student.id)}
-                      className="p-2 mr-1.5 rounded-md text-white bg-green-600"
-                    >
-                      <HiOutlinePencilSquare size={20} />
-                    </Button>
-                    <Button onClick={() => handleOpenDeleteModal(student.id)} className="p-2 rounded-md text-white bg-red-600">
-                      <HiOutlineTrash size={20} />
-                    </Button>
-                  </Typography>
-                </td>
-              </tr>
+          {searchTerm && searchedStudents.length > 0
+          ? searchedStudents.map((student, index) => (
+              <StudentRow
+                key={index}
+                index={index}
+                student={student}
+                handleOpenEditModal={handleOpenEditModal}
+                handleOpenDeleteModal={handleOpenDeleteModal}
+              />
+            ))
+          : students.map((student, index) => (
+              <StudentRow
+                key={index}
+                index={index}
+                student={student}
+                handleOpenEditModal={handleOpenEditModal}
+                handleOpenDeleteModal={handleOpenDeleteModal}
+              />
             ))}
           </tbody>
         </table>

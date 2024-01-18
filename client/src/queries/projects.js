@@ -11,6 +11,22 @@ const GET_PROJECTS = gql`
   }
 `;
 
+const SEARCH_PROJECT = gql`
+  query SearchProjects($query: String!) {
+    searchProjects(query: $query) {
+      id
+      title
+      description
+      status
+      student {
+        id
+        name
+        email
+      }
+    }
+  }
+`;
+
 const GET_PROJECT = gql`
   query getProject($id: ID!) {
     project(id: $id) {
@@ -27,4 +43,4 @@ const GET_PROJECT = gql`
   }
 `;
 
-export { GET_PROJECTS, GET_PROJECT };
+export { GET_PROJECTS, GET_PROJECT, SEARCH_PROJECT };

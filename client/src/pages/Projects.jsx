@@ -1,15 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { Card, Typography, CardHeader, Button } from "@material-tailwind/react";
-import { HiOutlineUserAdd, HiOutlineTrash } from "react-icons/hi";
-import { HiOutlinePencilSquare } from "react-icons/hi2";
+import { HiOutlineUserAdd } from "react-icons/hi";
 import AddProjects from "../components/AddProjects";
 import { useQuery } from "@apollo/client";
 import { useGlobalContext } from "../context/context";
 
-import { GET_PROJECTS } from "../queries/projects";
+import { GET_PROJECTS, SEARCH_PROJECT } from "../queries/projects";
 import EditProject from "../components/EditProject";
 import DeleteProject from "../components/DeleteProject";
+import ProjectRow from "../components/ProjectRow";
 
 const Projects = () => {
   const {
@@ -21,9 +21,22 @@ const Projects = () => {
     openDeleteModal,
     handleOpenDeleteModal,
   } = useGlobalContext();
-  const { loading, error, data } = useQuery(GET_PROJECTS);
 
-  const projects = data && data.projects ? data.projects : [];
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchTerm, setSearchTerm] = useState(false);
+
+  const handleSearchQuery = (e) => {
+    setSearchTerm(true);
+    setSearchQuery(e.target.value);
+  };
+
+  const { loading: projectLoading, error: projectError, data: projectsData } = useQuery(GET_PROJECTS);
+  const { loading: searchLoading, error: searchError, data: searchData } = useQuery(SEARCH_PROJECT, {
+    variables: { query: searchQuery }
+  });
+
+  const projects = projectsData && projectsData.projects ? projectsData.projects : [];
+  const searchedProjects = searchData && searchData.searchProjects ? searchData.searchProjects : [];
 
   useEffect(() => {
     document.title = "Projects";
@@ -64,13 +77,22 @@ const Projects = () => {
                 See information about all the projects prepared by the students
               </Typography>
             </div>
-            <Button
-              onClick={handleOpenModal}
-              className="flex items-center text-white font-semibold gap-1"
-            >
-              <HiOutlineUserAdd size={15} />
-              <span>Add Project</span>
-            </Button>
+            <div className="flex flex-col items-start gap-3">
+              <Button
+                onClick={handleOpenModal}
+                className="flex items-center text-white font-semibold gap-1"
+              >
+                <HiOutlineUserAdd size={15} />
+                <span>Add Projects</span>
+              </Button>
+              <input
+                className="bg-white outline-none rounded-md p-2 font-semibold text-sm"
+                name="query"
+                placeholder="Search Projects..."
+                value={searchQuery}
+                onChange={handleSearchQuery}
+              />
+            </div>
           </div>
         </CardHeader>
         <table className="w-full table-auto text-left">
@@ -124,66 +146,25 @@ const Projects = () => {
             </tr>
           </thead>
           <tbody>
-            {projects.map((project, index) => (
-              <tr key={index}>
-                <td className="p-4 border-b border-blue-gray-50">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {index + 1}
-                  </Typography>
-                </td>
-                <td className="p-4 border-b border-blue-gray-50">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {project.title}
-                  </Typography>
-                </td>
-                <td className="p-4 border-b border-blue-gray-50 w-[700px] text-ellipsis overflow-hidden">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {project.description}
-                  </Typography>
-                </td>
-                <td className="p-4 border-b border-blue-gray-50">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    {project.status}
-                  </Typography>
-                </td>
-                <td className="p-4 flex items-center border-b border-blue-gray-50">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal"
-                  >
-                    <Button
-                      onClick={() => handleOpenEditModal(project.id)}
-                      className="p-2 mr-1.5 rounded-md text-white bg-green-600"
-                    >
-                      <HiOutlinePencilSquare size={20} />
-                    </Button>
-                    <Button
-                      onClick={() => handleOpenDeleteModal(project.id)}
-                      className="p-2 rounded-md text-white bg-red-600"
-                    >
-                      <HiOutlineTrash size={20} />
-                    </Button>
-                  </Typography>
-                </td>
-              </tr>
-            ))}
+            {searchTerm && searchedProjects.length > 0
+            ? searchedProjects.map((project, index) => (
+                <ProjectRow
+                  key={index}
+                  index={index}
+                  project={project}
+                  handleOpenEditModal={handleOpenEditModal}
+                  handleOpenDeleteModal={handleOpenDeleteModal}
+                />
+              ))
+            : projects.map((project, index) => (
+                <ProjectRow
+                  key={index}
+                  index={index}
+                  project={project}
+                  handleOpenEditModal={handleOpenEditModal}
+                  handleOpenDeleteModal={handleOpenDeleteModal}
+                />
+              ))}
           </tbody>
         </table>
       </Card>
