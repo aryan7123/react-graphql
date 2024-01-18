@@ -13,6 +13,19 @@ const GET_STUDENTS = gql`
   }
 `;
 
+const SEARCH_STUDENT = gql`
+  query SearchStudent($query: String!) {
+    searchStudents(query: $query) {
+      id
+      name
+      age
+      email
+      mobileNumber
+      subject
+    }
+  }
+`;
+
 const GET_STUDENT = gql`
   query getStudent($id: ID!) {
     student(id: $id) {
@@ -26,4 +39,4 @@ const GET_STUDENT = gql`
   }
 `;
 
-export { GET_STUDENTS, GET_STUDENT };
+export { GET_STUDENTS, GET_STUDENT, SEARCH_STUDENT };

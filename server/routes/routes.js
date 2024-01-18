@@ -58,6 +58,16 @@ const RootQueries = new GraphQLObjectType({
         return Student.findById(args.id);
       }
     },
+    searchStudents: {
+      type: new GraphQLList(StudentType),
+      args: {
+        query: { type: new GraphQLNonNull(GraphQLString) }
+      },
+      async resolve(_, { query }) {
+        const result = await Student.find({ name: { $regex: query, $options: 'i' } });
+        return result;
+      }
+    },
     projects: {
       type: new GraphQLList(ProjectType),
       resolve(parent, args) {

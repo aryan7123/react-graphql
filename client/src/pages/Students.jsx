@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import { Card, Typography, CardHeader, Button } from "@material-tailwind/react";
 import { HiOutlineUserAdd, HiOutlineTrash } from "react-icons/hi";
@@ -7,7 +7,7 @@ import AddStudents from "../components/AddStudents";
 import { useGlobalContext } from "../context/context";
 
 import { useQuery } from "@apollo/client";
-import { GET_STUDENTS } from "../queries/students";
+import { GET_STUDENTS, SEARCH_STUDENT } from "../queries/students";
 import EditStudent from "../components/EditStudent";
 import DeleteStudent from "../components/DeleteStudent";
 
@@ -21,9 +21,23 @@ const Students = () => {
     openDeleteModal,
     handleOpenDeleteModal
   } = useGlobalContext();
-  const { loading, error, data } = useQuery(GET_STUDENTS);
 
-  const students = data && data.students ? data.students : [];
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchTerm, setSearchTerm] = useState(false);
+
+  const handleSearchQuery = (e) => {
+    setSearchTerm(true);
+    setSearchQuery(e.target.value);
+  }
+
+  const { loading: studentLoading, error: studentError, data: studentsData } = useQuery(GET_STUDENTS);
+
+  const { loading: searchLoading, error: searchError, data: searchData } = useQuery(SEARCH_STUDENT, {
+    variables: { query: searchQuery }
+  });
+
+  const searchedStudents = searchData && searchData.searchStudents ? searchData.searchStudents : [];
+  const students = studentsData && studentsData.students ? studentsData.students : [];
 
   useEffect(() => {
     document.title = "Students";
@@ -67,13 +81,22 @@ const Students = () => {
                 See information about all the students
               </Typography>
             </div>
-            <Button
-              onClick={handleOpenModal}
-              className="flex items-center text-white font-semibold gap-1"
-            >
-              <HiOutlineUserAdd size={15} />
-              <span>Add Student</span>
-            </Button>
+            <div className="flex flex-col items-start gap-3">
+              <Button
+                onClick={handleOpenModal}
+                className="flex items-center text-white font-semibold gap-1"
+              >
+                <HiOutlineUserAdd size={15} />
+                <span>Add Student</span>
+              </Button>
+              <input 
+                className="bg-white outline-none rounded-md p-2 font-semibold text-sm"
+                name="query"
+                placeholder="Search Students..."
+                value={searchQuery}
+                onChange={handleSearchQuery}
+              />
+            </div>
           </div>
         </CardHeader>
         <table className="w-full table-auto text-left">
