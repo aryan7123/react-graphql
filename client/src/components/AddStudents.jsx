@@ -136,7 +136,7 @@ const AddStudents = ({ openModal, handleOpenModal }) => {
               onChange={handleChange}
             />
           </div>
-          <span className="text-sm font-medium text-red-500"></span>
+          {/* <span className="text-sm font-medium text-red-500">{error}</span> */}
         </DialogBody>
         <DialogFooter>
           <Button

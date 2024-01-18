@@ -109,24 +109,31 @@ const mutation = new GraphQLObjectType({
         subject: { type: new GraphQLNonNull(GraphQLString) },
       },
       async resolve(parent, args) {
-        const existingEmail = await Student.findOne({ email: args.email });
-        const existingPhone = await Student.findOne({ mobileNumber: args.mobileNumber });
+        try {
+          const existingEmail = await Student.findOne({ email: args.email });
+          const existingPhone = await Student.findOne({ mobileNumber: args.mobileNumber });
 
-        if (existingEmail) {
-          throw new Error('Email already exists');
-        }
-        else if(existingPhone) {
-          throw new Error('Phone Number already exists');
-        }
-        else {
-          const newStudent = new Student({
-            name: args.name,
-            age: args.age,
-            mobileNumber: args.mobileNumber,
-            email: args.email,
-            subject: args.subject
-          });
-          return await newStudent.save();
+          if(!name || !age || !mobileNumber || !email || !subject) {
+            throw new Error('All fields are required');
+          }
+          else if (existingEmail) {
+            throw new Error('Email already exists');
+          }
+          else if(existingPhone) {
+            throw new Error('Phone Number already exists');
+          }
+          else {
+            const newStudent = new Student({
+              name: args.name,
+              age: args.age,
+              mobileNumber: args.mobileNumber,
+              email: args.email,
+              subject: args.subject
+            });
+            return await newStudent.save();
+          }
+        } catch (error) {
+          return { error: "Student can't be added" };
         }
       }
     },
@@ -139,14 +146,23 @@ const mutation = new GraphQLObjectType({
         studentId: { type: new GraphQLNonNull(GraphQLID) },
       },
       async resolve(parent, args) {
-        const project = new Project({
-          title: args.title,
-          description: args.description,
-          status: args.status,
-          studentId: args.studentId,
-        });
+        try {
+          if(!title || !description || !status || !studentId) {
+            throw new Error('All fields are required');
+          }
+          else {
+            const project = new Project({
+              title: args.title,
+              description: args.description,
+              status: args.status,
+              studentId: args.studentId,
+            });
+            return await project.save();
+          }
+        } catch (error) {
+          return { error: "Project can't be added" };
+        }
 
-        return await project.save();
       },
     },
     updateStudent: {
